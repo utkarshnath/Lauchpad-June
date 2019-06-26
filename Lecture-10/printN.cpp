@@ -18,9 +18,6 @@ void dec(int n){
     dec(n-1);
     return;
 }
-
-
-
 int main(){
 dec(5);
 }
