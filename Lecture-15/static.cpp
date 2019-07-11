@@ -1,6 +1,6 @@
 #include<iostream>
 using namespace std;
-void f(){n
+void f(){
     static int i = 10;
     i++;
     cout<<i<<endl;

@@ -2,9 +2,9 @@
 using namespace std;
 struct book{
 public:
-    long a;
     int x;
-    char arr[67];
+    long a;
+    int y;
 };
 int main(){
     cout<<sizeof(book)<<endl;
