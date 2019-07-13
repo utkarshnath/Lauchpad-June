@@ -75,7 +75,18 @@ node * insertAtHead(node * head,int data){
     temp->next = head;
     return temp;
 }
-
+void insertAtHead(node *& head,int data){
+    node * temp = new node(data);
+    temp->next = head;
+    head = temp;
+    return;
+}
+void insertAtHead(node ** head,int data){
+    node * temp = new node(data);
+    temp->next = *head;
+    *head = temp;
+    return;
+}
 void print(node * head){
     while(head){
         cout<<head->data<<"-->";
