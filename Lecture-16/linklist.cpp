@@ -120,6 +120,23 @@ void deleteAtPositionK(node *& head,int k){
     delete temp;
     return;
 }
+int length(node * head){
+    int i=0;
+    while(head){
+        head = head->next;
+        i++;
+    }
+    return i;
+}
+node * midPoint(node * head){
+    node * it1 = head; // 2 steps
+    node * it2 = head; // 1 steps
+    while(it1->next && it1->next->next){
+        it1 = it1->next->next;
+        it2 = it2->next;
+    }
+    return it2;
+}
 void print(node * head){
     while(head){
         cout<<head->data<<"-->";
@@ -128,16 +145,92 @@ void print(node * head){
     cout<<"NULL"<<endl;
     return;
 }
+bool findElement(node * head,int data){
+    if(!head){
+        return false;
+    }
+    if(head->data==data){
+        return true;
+    }
+    bool found = findElement(head->next,data);
+    return found;
+}
+node * findAtPositionK(node * head,int k){
+    while(k>0){
+        head = head->next;
+        k--;
+    }
+    return head;
+}
+void swap(node *& head,int i,int j){
+    if(i==0 && j==1){
+        node * a = head;
+        node * b = a->next;
+        node * bnext = b->next;
+        head = b;
+        b->next = a;
+        a->next = bnext;
+        return;
+    }
+    if(i==0){
+        node * bprev = findAtPositionK(head,j-1);
+        node * a = head;
+        node * b = bprev->next;
+        node * bnext = b->next;
+        head = b;
+        b->next = a->next;
+        bprev->next = a;
+        a->next = bnext;
+        return;
+    }
+    if(j-i==1){
+        node * aprev = findAtPositionK(head,i-1);
+        node * a = aprev->next;
+        node * b = a->next;
+        node * bnext = b->next;
+        aprev->next = b;
+        b->next = a;
+        a->next = bnext;
+        return;
+    }
+    node * aprev = findAtPositionK(head,i-1);
+    node * bprev = findAtPositionK(head,j-1);
+    node * a = aprev->next;
+    node * b = bprev->next;
+    node * bnext = b->next;
+    aprev->next = b;
+    b->next = a->next;
+    bprev->next = a;
+    a->next = bnext;
+}
+void bubbleSort(node *& head){
+    int n =length(head);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n-i-1;j++){
+            node * a = findAtPositionK(head,j);
+            node * b = a->next;
+            if(a->data > b->data){
+                swap(head,j,j+1);
+            }
+        }
+    }
+}
 int main(){
 //node* head = createLinkList();
 node * head = NULL;
 createLinkList2(&head);
 print(head);
-insertAtPositionK(&head,2,10);
-insertAtPositionK(&head,0,11);
+bubbleSort(head);
+print(head);
+/*
+//insertAtPositionK(&head,2,10);
+//insertAtPositionK(&head,0,11);
 //createLinkList1(head);
 print(head);
-deleteAtPositionK(head,0);
-deleteAtPositionK(head,2);
+//deleteAtPositionK(head,0);
+//deleteAtPositionK(head,2);
 print(head);
+cout<<     ((*midPoint(head)).data)  <<endl;
+
+*/
 }
