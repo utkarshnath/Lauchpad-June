@@ -215,6 +215,20 @@ void bubbleSort(node *& head){
         }
     }
 }
+node * ithElementFromLast(node * head,int &i){
+    if(!head){
+        return NULL;
+    }
+    node * it = ithElementFromLast(head->next,i);
+     if(it!=NULL){
+        return it;
+    }
+    i--;
+    if(i==0){
+        return head;
+    }
+    return NULL;
+}
 int main(){
 //node* head = createLinkList();
 node * head = NULL;
