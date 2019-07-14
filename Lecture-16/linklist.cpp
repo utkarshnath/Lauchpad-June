@@ -87,6 +87,39 @@ void insertAtHead(node ** head,int data){
     *head = temp;
     return;
 }
+
+void insertAtPositionK(node ** head,int k,int data){
+    node * temp = new node(data);
+    if(k==0){
+        temp->next = *head;
+        *head = temp;
+        return;
+    }
+    node * it = *head;
+    while(k>1){
+        it = it->next;
+        k--;
+    }
+    temp->next = it->next;
+    it->next = temp;
+}
+void deleteAtPositionK(node *& head,int k){
+    if(k==0){
+        node * temp = head;
+        head = head->next;
+        delete temp;
+        return;
+    }
+    node * it = head;
+    while(k>1){
+        it = it->next;
+        k--;
+    }
+    node * temp = it->next;
+    it->next = it->next->next;
+    delete temp;
+    return;
+}
 void print(node * head){
     while(head){
         cout<<head->data<<"-->";
@@ -100,7 +133,11 @@ int main(){
 node * head = NULL;
 createLinkList2(&head);
 print(head);
-head = insertAtHead(head,10);
+insertAtPositionK(&head,2,10);
+insertAtPositionK(&head,0,11);
 //createLinkList1(head);
+print(head);
+deleteAtPositionK(head,0);
+deleteAtPositionK(head,2);
 print(head);
 }
