@@ -229,12 +229,136 @@ node * ithElementFromLast(node * head,int &i){
     }
     return NULL;
 }
+node * ithElementFromLast1(node * head,int i){
+    static int n = i;
+    if(!head){
+        return NULL;
+    }
+    node * it = ithElementFromLast1(head->next,i);
+     if(it!=NULL){
+        return it;
+    }
+    n--;
+    if(n==0){
+        return head;
+    }
+    return NULL;
+}
+node * mergell(node * head1,node * head2){
+    node * head = NULL;
+    if(head1==NULL && head2==NULL){
+        return NULL;
+    }
+    if(head1==NULL){
+        return head2;
+    }
+    if(head2==NULL){
+        return head1;
+    }
+    if(head1->data < head2->data){
+        head = head1;
+        head1 = head1->next;
+    }else{
+        head = head2;
+        head2 = head2->next;
+    }
+    node * tail = head;
+    while(head1 && head2){
+        if(head1->data < head2->data){
+            tail->next = head1;
+            tail = tail->next;
+            head1 = head1->next;
+        }else{
+            tail->next = head2;
+            tail = tail->next;
+            head2 = head2->next;
+        }
+    }
+    if(head1){
+        tail->next = head1;
+    }else{
+        tail->next = head2;
+    }
+    return head;
+}
+node * mergeSort(node * head,int start,int end){
+    if(start>end){
+        return NULL;
+    }
+    if(start==end){
+        return head;
+    }
+    int mid = (start+end)/2;
+    node * midNode = findAtPositionK(head,mid);
+    node * head2 = midNode->next;
+    midNode->next = NULL;
+    node * head1 = mergeSort(head,start,mid);
+    head2 = mergeSort(head2,start,end-mid-1);
+    head = mergell(head1,head2);
+    return head;
+}
+node * reversell(node * head){
+    node * it = head;
+    node * it1 = head->next;
+    it->next = NULL;
+    while(it1){
+        node * temp = it1->next;
+        it1->next = it;
+        it = it1;
+        it1 = temp;
+    }
+    return it;
+}
+node * reversell1(node * head){
+    if(head==NULL){
+        return NULL;
+    }
+    if(head->next==NULL){
+        return head;
+    }
+    node * newhead = reversell1(head->next);
+    node * tail = newhead;
+    while(tail->next){
+        tail = tail->next;
+    }
+    tail->next = head;
+    head->next = NULL;
+    return newhead;
+}
+node * reversell2(node * head,node *& tail){
+    if(head==NULL){
+        return NULL;
+    }
+    if(head->next==NULL){
+        tail = head;
+        return head;
+    }
+    node * newhead = reversell1(head->next);
+    tail->next = head;
+    head->next = NULL;
+    tail = head;
+    return newhead;
+}
+pair<node*,node *> reversell3(node *head){
+    if(head->next==NULL){
+        pair<node*,node *> mypair(head,head);
+        return mypair;
+    }
+    pair<node*,node *>p = reversell3(head->next);
+    p.second->next = head;
+    head->next = NULL;
+    p.second = head;
+    return p;
+}
 int main(){
 //node* head = createLinkList();
 node * head = NULL;
 createLinkList2(&head);
+//print(head);
+//bubbleSort(head);
 print(head);
-bubbleSort(head);
+//head = mergeSort(head,0,length(head)-1);
+head = reversell3(head).first;
 print(head);
 /*
 //insertAtPositionK(&head,2,10);
