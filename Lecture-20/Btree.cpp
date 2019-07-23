@@ -165,6 +165,104 @@ pair<node *,int> maxSubGroup1(node * root){
     rootpair.second = groupSum(root);
     return max1(rootpair,max1(left,right));
 }
+
+int degree(node * root){
+    return (bool)root->left + (bool)root->right;
+}
+int height(node * root){
+    if(!root){
+        return 0;
+    }
+    int left = height(root->left);
+    int right = height(root->right);
+    return max(left,right)+1;
+}
+void printAtDepthK(node * root,int k){
+    if(!root){
+        return;
+    }
+    if(k==0){
+        cout<<root->data<<" ";
+        return;
+    }
+    printAtDepthK(root->left,k-1);
+    printAtDepthK(root->right,k-1);
+    return;
+}
+void printLevelWisePrint(node * root){
+    queue<node *>q1;
+    queue<node *>q2;
+    q1.push(root);
+    while(!q1.empty() || !q2.empty()){
+        while(!q1.empty()){
+            node * top = q1.front();
+            q1.pop();
+            cout<<top->data<<" ";
+            if(top->left){
+                q2.push(top->left);
+            }
+            if(top->right){
+                q2.push(top->right);
+            }
+        }
+        cout<<endl;
+         while(!q2.empty()){
+            node * top = q2.front();
+            q2.pop();
+            cout<<top->data<<" ";
+            if(top->left){
+                q1.push(top->left);
+            }
+            if(top->right){
+                q1.push(top->right);
+            }
+        }
+        cout<<endl;
+    }
+}
+int diameter(node * root){
+    if(root==NULL){
+        return 0;
+    }
+    int ld = diameter(root->left);
+    int rd = diameter(root->right);
+    int lh = height(root->left);
+    int rh = height(root->right);
+    int d = lh+rh+1;
+    return max(d,max(ld,rd));
+}
+pair<int,int> diameterFaster(node * root){
+    if(root==NULL){
+        return make_pair(0,0);
+    }
+    pair<int,int> left = diameterFaster(root->left);
+    pair<int,int> right = diameterFaster(root->right);
+    int ld = left.first;
+    int rd = right.first;
+    int lh = left.second;
+    int rh = right.second;
+    int diameter = max(lh+rh+1,max(ld,rd));
+    int height = max(lh,rh)+1;
+    return make_pair(diameter,height);
+}
+bool find(node * root,int data){
+    if(root==NULL){
+        return false;
+    }
+    if(root->data==data){
+        return true;
+    }
+    return find(root->left) || find(root->right);
+}
+node * mirror(node * root){
+    if(root==NULL){
+        return NULL;
+    }
+    node * newroot = new node(root->data);
+    newroot->right = mirror(root->left);
+    newroot->left = mirror(root->right);
+    return newroot;
+}
 //8 10 3 1 6 -1 14 -1 -1 4 7 13 -1 -1 -1 -1 -1 -1 -1
 int main(){
 node * root  = createBtree();
@@ -177,9 +275,14 @@ inorder(root);
 cout<<endl;
 levelOrderPrint(root);
 cout<<endl;
-*/
+
 cout<<maxNode(root)<<endl;
 cout<<maxSubGroup1(root).second<<endl;
+//printAtDepthK(root,2);
+printLevelWisePrint(root);
+*/
+cout<<diameterFaster(root).first<<endl;
+cout<<diameterFaster(root).second<<endl;
 }
 
 
