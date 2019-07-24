@@ -64,12 +64,75 @@ void printLevelWisePrint(node * root){
         cout<<endl;
     }
 }
+bool search(node * root,int data){
+    if(root==NULL){
+        return false;
+    }
+    if(root->data==data){
+        return true;
+    }
+    if(root->data > data){
+        return search(root->left,data);
+    }else{
+        return search(root->right,data);
+    }
+}
+node * deleteElement(node * root,int data){
+    if(!root){
+        return NULL;
+    }
+    if(root->data==data){
+        // 0 child
+        if(!root->left && !root->right){
+            delete root;
+            return NULL;
+        }
+        // 1 child
+        if(root->left && !root->right){
+            node * temp = root->left;
+            delete root;
+            return temp;
+        }
+        if(!root->left && root->right){
+            node * temp = root->right;
+            delete root;
+            return temp;
+        }
+
+        // 2 child
+        node * it = root->left;
+        node * prev = root;
+        while(it->right){
+            prev = it;
+            it = it->right;
+        }
+        if(prev==root){
+            it->right = root->right;
+            delete root;
+            return it;
+        }
+        prev->right = it->left;
+        it->left = root->left;
+        it->right = root->right;
+        delete root;
+        return it;
+    }
+    if(root->data > data){
+        root->left = deleteElement(root->left,data);
+    }else{
+        root->right = deleteElement(root->right,data);
+    }
+    return root;
+}
 int main(){
 node * root = NULL;
 addElement(root,8);addElement(root,3);addElement(root,10);
 addElement(root,1);addElement(root,6);addElement(root,14);
 addElement(root,13);addElement(root,4);addElement(root,7);
 addElement(root,2);
+//root = deleteElement(root,4);
+//deleteElement(root,10);
+root = deleteElement(root,6);
 printLevelWisePrint(root);
 }
 
