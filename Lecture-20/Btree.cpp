@@ -252,7 +252,7 @@ bool find(node * root,int data){
     if(root->data==data){
         return true;
     }
-    return find(root->left) || find(root->right);
+    return find(root->left,data) || find(root->right,data);
 }
 node * mirror(node * root){
     if(root==NULL){
@@ -263,9 +263,44 @@ node * mirror(node * root){
     newroot->left = mirror(root->right);
     return newroot;
 }
+int findIndex(vector<int>in,int start,int end,int k){
+    for(int i=start;i<=end;i++){
+        if(in[i]==k){
+            return i;
+        }
+    }
+    return -1;
+}
+node * createTreeFromPreIn(vector<int>pre,vector<int>in,int pstart,int pend,int istart,int iend){
+    if(pstart>pend){
+        return NULL;
+    }
+    node * root = new node(pre[pstart]);
+    int index = findIndex(in,istart,iend,pre[pstart]);
+    int length = index-istart;
+    root->left = createTreeFromPreIn(pre,in,pstart+1,pstart+length,istart,index-1);
+    root->right = createTreeFromPreIn(pre,in,pstart+length+1,pend,index+1,iend);
+    return root;
+}
+bool PrintPath(node * root,int data){
+    if(root==NULL){
+        return false;
+    }
+    if(root->data==data){
+        cout<<root->data<<" ";
+        return true;
+    }
+    bool left = PrintPath(root->left,data);
+    bool right = PrintPath(root->right,data);
+    if(left||right){
+        cout<<root->data<<" ";
+        return true;
+    }
+    return false;
+}
 //8 10 3 1 6 -1 14 -1 -1 4 7 13 -1 -1 -1 -1 -1 -1 -1
 int main(){
-node * root  = createBtree();
+//node * root  = createBtree();
 /*
 preorder(root);
 cout<<endl;
@@ -281,8 +316,21 @@ cout<<maxSubGroup1(root).second<<endl;
 //printAtDepthK(root,2);
 printLevelWisePrint(root);
 */
-cout<<diameterFaster(root).first<<endl;
-cout<<diameterFaster(root).second<<endl;
+//cout<<diameterFaster(root).first<<endl;
+//cout<<diameterFaster(root).second<<endl;
+vector<int>pre;
+pre.push_back(8);pre.push_back(10);pre.push_back(1);pre.push_back(6);
+pre.push_back(4);pre.push_back(7);pre.push_back(3);pre.push_back(14);
+pre.push_back(13);
+vector<int>in;
+in.push_back(1);in.push_back(10);in.push_back(4);in.push_back(6);
+in.push_back(7);in.push_back(8);in.push_back(3);in.push_back(13);
+in.push_back(14);
+node * root = createTreeFromPreIn(pre,in,0,pre.size()-1,0,in.size()-1);
+levelOrderPrint(root);
+cout<<endl;
+PrintPath(root,7);
+cout<<endl;
 }
 
 
