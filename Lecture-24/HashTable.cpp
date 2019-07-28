@@ -11,19 +11,45 @@ struct node{
         this->value = value;
         next = NULL;
     }
+
+    ~node(){
+        if(next!=NULL){
+            delete next;
+        }
+    }
 };
 template <typename T>
 class HashTable{
     node<T>** table;
     int tableSize;
+    int currSize;
     int hashFunction(string key){
         int power = 1;
         int curr = 0;
         for(int i=0;i<key.size();i++){
             power = (power*37)%tableSize;
-            curr+= (key[i]*power);
+            curr+= (key[i]*power)%tableSize;
         }
         return curr%tableSize;
+    }
+    void rehash(){
+        node<T>** oldTable = table;
+        int oldTableSize = tableSize;
+        table = new node<T>*[2*tableSize];
+        tableSize = 2*tableSize;
+        currSize = 0;
+        for(int i=0;i<tableSize;i++){
+            table[i] = NULL;
+        }
+        for(int i=0;i<oldTableSize;i++){
+            node<T>* head = oldTable[i];
+            while(head){
+                insert(head->key,head->value);
+                head = head->next;
+            }
+            delete oldTable[i];
+        }
+        delete [] oldTable;
     }
 public:
     HashTable(int size){
@@ -32,6 +58,7 @@ public:
             table[i] = NULL;
         }
         tableSize = size;
+        currSize = 0;
     }
 
     void insert(string key,T value){
@@ -39,6 +66,12 @@ public:
         int index = hashFunction(key);
         temp->next = table[index];
         table[index] = temp;
+        currSize++;
+        float lf = currSize/(tableSize*1.0);
+        //cout<<lf<<endl;
+        if(lf>0.7){
+            rehash();
+        }
     }
 
     T search(string key){
@@ -59,6 +92,7 @@ public:
         node<T>* prev = NULL;
         while(head){
             if(key.compare(head->key)==0 && head->value==value){
+                currSize--;
                 if(!prev){
                     table[index] = head->next;
                     delete head;
@@ -72,7 +106,6 @@ public:
             head = head->next;
         }
     }
-
     void print(){
         for(int i=0;i<tableSize;i++){
             cout<<i<<"::";
@@ -87,17 +120,18 @@ public:
     }
 };
 int main(){
-HashTable<int> h(70);
-h.insert("ancd",10);
-h.insert("wehkfewk",20);
-h.insert("ankwefkjcd",30);
-h.insert("oqwoiq",40);
-h.insert("qhwbdq",50);
+HashTable<int> h(7);
+h.insert("abc",13);
+h.insert("behrhgjer",10);
+h.insert("dvqw",11);
+h.insert("iwue",113);
 h.print();
-cout<<h.search("ankwefkjcd")<<endl;
-h.remove("qhwbdq",50);
 cout<<endl;
+h.insert("ioe",113);
 h.print();
+cout<<endl;
+
+
 }
 
 
