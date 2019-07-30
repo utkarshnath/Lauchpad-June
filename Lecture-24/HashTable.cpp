@@ -62,6 +62,8 @@ public:
     }
 
     void insert(string key,T value){
+
+        mymap[key] = valeu;
         node<T> * temp = new node<T>(key,value);
         int index = hashFunction(key);
         temp->next = table[index];
