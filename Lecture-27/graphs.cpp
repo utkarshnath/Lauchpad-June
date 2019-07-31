@@ -53,8 +53,58 @@ public:
         }
     }
     void dfsDriver(int src,vector<bool>& visited){
-
+        if(visited[src]){
+            return;
+        }
+        cout<<src<<" ";
+        visited[src] = true;
+        list<int> :: iterator it;
+        for(it = l[src].begin();it!=l[src].end();it++){
+            dfsDriver(*it,visited);
+        }
+        return;
     }
+    void dfs(){
+        vector<bool> visited;
+        for(int i=0;i<v;i++){
+            visited.push_back(0);
+        }
+        for(int i=0;i<v;i++){
+            if(!visited[i]){
+                dfsDriver(i,visited);
+            }
+        }
+        cout<<endl;
+    }
+    void shortestDist(int src){
+        vector<bool>visited;
+        vector<int>dist;
+        queue<int>q;
+        for(int i=0;i<v;i++){
+            visited.push_back(false);
+            dist.push_back(INT_MAX);
+        }
+        dist[src] = 0;
+        visited[src] = true;
+        q.push(src);
+        while(!q.empty()){
+            int front = q.front();
+            q.pop();
+            for(auto it = l[front].begin();it!=l[front].end();it++){
+                int curr = *it;
+                if(!visited[curr]){
+                     dist[curr] = dist[front]+1;
+                     visited[curr] = true;
+                     q.push(curr);
+                }
+            }
+        }
+        for(int i=0;i<v;i++){
+            cout<<dist[i]<<" ";
+        }
+        cout<<endl;
+    }
+
     void print(){
         for(int i=0;i<v;i++){
             list<int> :: iterator it;
@@ -78,5 +128,5 @@ int main(){
     g.addEdge(2,4,true);
     g.addEdge(3,4,true);
     g.addEdge(5,6,true);
-    g.bfs();
+    g.shortestDist(0);
 }
