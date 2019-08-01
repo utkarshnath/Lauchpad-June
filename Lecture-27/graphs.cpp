@@ -104,6 +104,58 @@ public:
         }
         cout<<endl;
     }
+    bool cycleDriver(int src,vector<bool>&visited,vector<bool>&inStack){
+        if(visited[src] && inStack[src]){
+            return true;
+        }
+        if(visited[src]){
+            return false;
+        }
+        visited[src] = true;
+        inStack[src] = true;
+        auto it = l[src].begin();
+        while(it!=l[src].end()){
+            bool cycle = cycleDriver(*it,visited,inStack);
+            if(cycle){
+                return true;
+            }
+            it++;
+        }
+        inStack[src] = false;
+        return false;
+    }
+
+    bool isCycle(){
+        vector<bool>visited;
+        vector<bool>inStack;
+        for(int i=0;i<v;i++){
+            visited.push_back(false);
+            inStack.push_back(false);
+        }
+        for(int i=0;i<v;i++){
+            if(!visited[i]){
+                bool cycle = cycleDriver(i,visited,inStack);
+                if(cycle){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void topoOrder(int src,vector<bool>&visited,stack<int>&s){
+        if(visited[src]){
+            return;
+        }
+        visited[src] = true;
+        auto it = l[src].begin();
+        while(it!=l[src].end()){
+            topoOrder(*it,visited,s);
+            it++;
+        }
+        s.push(src);
+        return;
+    }
 
     void print(){
         for(int i=0;i<v;i++){
