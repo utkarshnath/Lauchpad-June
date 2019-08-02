@@ -14,6 +14,7 @@ public:
         this->real = real;
     }
     void setImg(int img){
+        cout<<getImg()<<endl;
         this->img = img;
     }
     int getReal(){
@@ -40,6 +41,7 @@ public:
 
 int main(){
 complex c(3,4);
+c.setImg(5);
  complex c1 = ~c;
 // ~c;
  (~c).print();
